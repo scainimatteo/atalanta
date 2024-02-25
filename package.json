@@ -1,0 +1,38 @@
+{
+  "name": "scraper",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/index.ts",
+  "scripts": {
+    "start": "npm run build; npm run execute",
+    "start:development": "npm run build; npm run execute:development",
+    "start:development:scraper": "npm run build; npm run execute:development:scraper",
+    "start:development:events": "npm run build; npm run execute:development:events",
+    "execute": "node dist/index.js",
+    "execute:development": "NODE_ENV=development node dist/index.js",
+    "execute:development:scraper": "NODE_ENV=development node dist/index-scraper.js",
+    "execute:development:events": "NODE_ENV=development node dist/index-events.js",
+    "build": "rm -rf dist; tsc"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/config": "^3.3.3",
+    "@types/node": "^20.11.19",
+    "@types/pg": "^8.11.0",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "axios": "^1.6.7",
+    "cheerio": "^1.0.0-rc.12",
+    "config": "^3.3.11",
+    "dotenv": "^16.4.4",
+    "googleapis": "^133.0.0",
+    "module-alias": "^2.2.3",
+    "pg": "^8.11.3"
+  },
+  "_moduleAliases": {
+    "@": "dist"
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "database": {
+    "host": "127.0.0.1",
+    "user": "pi",
+    "database_name": "atalanta",
+    "port": 5432
+  },
+  "google_calendar": {
+    "calendar_id": {
+      "serie_a": "6584876d12f1a514ef62059c766c542bcc10745de05e0acc1107b6aca10d4272@group.calendar.google.com",
+      "coppa_italia": "a3a15a498ced4d7ec9742f8323eb80f4cb1cfebd699b75769122fd5934d60d38@group.calendar.google.com",
+      "europa": "6dbb32edbf9bcd4a0971250aa6b5350725aed392ede71f852983e9df4b824a6f@group.calendar.google.com"
+    },
+    "timezone": "Europe/Rome"
+  },
+  "source": {
+    "base_url": "https://www.atalanta.it/partite-e-risultati",
+    "query_param": "season",
+    "season": 2023,
+    "current_season": 2023
+  },
+  "competitions": {
+    "serie_a": {
+      "name": "Serie A",
+      "logo": "https://www.atalanta.it/wp-content/uploads/2018/09/serie-a-tim-2023-24.svg"
+    },
+    "coppa_italia": {
+      "name": "Coppa Italia",
+      "logo": "https://www.atalanta.it/wp-content/uploads/2018/09/Supercoppa-freccia-23.svg"
+    },
+    "europa_league": {
+      "name": "Europa League",
+      "logo": "https://www.atalanta.it/wp-content/uploads/2018/12/europa_league_color.svg"
+    },
+    "champions_league": {
+      "name": "Champions League",
+      "logo": "https://www.atalanta.it/wp-content/uploads/2019/06/logo-champions-league-rgb-nero.svg"
+    }
+  },
+  "scraper": {
+    "css_path": {
+      "current_match": "#next-match-hero",
+      "next_matches": "",
+      "previous_matches": ""
+    }
+  }
+}
