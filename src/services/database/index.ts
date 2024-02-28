@@ -78,8 +78,8 @@ class DatabaseService {
     const exactMatchRecords = await this.client.query<MatchTable>({
       text: `SELECT *
         FROM matches AS m
-        WHERE m.home = $1 AND m.away = $2 AND m.date = $4 AND m.competition = $3 AND m.season = $4`,
-      values: [match.homeTeam, match.awayTeam, match.date, match.competition, match.season]
+        WHERE m.home = $1 AND m.away = $2 AND m.date = $3 AND m.competition = $4 AND m.season = $5`,
+      values: [match.homeTeam, match.awayTeam, new Date(match.date), match.competition, match.season]
     });
 
     if (exactMatchRecords.rowCount > 1) {

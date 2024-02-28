@@ -9,6 +9,7 @@
     "start:development:scraper": "npm run build; npm run execute:development:scraper",
     "start:development:events": "npm run build; npm run execute:development:events",
     "execute": "node dist/index.js",
+    "execute:scraper": "node dist/index-scraper.js",
     "execute:development": "NODE_ENV=development node dist/index.js",
     "execute:development:scraper": "NODE_ENV=development node dist/index-scraper.js",
     "execute:development:events": "NODE_ENV=development node dist/index-events.js",
