@@ -30,7 +30,8 @@
     },
     "europa_league": {
       "name": "Europa League",
-      "logo": "https://www.atalanta.it/wp-content/uploads/2018/12/europa_league_color.svg"
+      "logo": "https://www.atalanta.it/wp-content/uploads/2018/12/europa_league_color.svg",
+      "logo_light": "https://www.atalanta.it/wp-content/uploads/2018/12/europa_league_white2.svg"
     },
     "champions_league": {
       "name": "Champions League",

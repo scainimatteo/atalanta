@@ -108,10 +108,34 @@ class DatabaseService {
   }
 
   async doesCalendarEventExists(match: MatchTable): Promise<[ boolean, string? ]> {
+    if (!isEuropeanMatch(match)) {
+      return await this.doesNationalCalendarEventExists(match);
+    } else {
+      return await this.doesEuropeanCalendarEventExists(match);
+    }
+  }
+
+  async doesNationalCalendarEventExists(match: MatchTable): Promise<[ boolean, string? ]> {
     const response = await this.client.query<EventTable>({
       text: `SELECT * FROM events
         WHERE home = $1 AND away = $2 AND competition = $3 AND season = $4`,
       values: [match.home, match.away, match.competition, match.season]
+    });
+
+    if (response.rowCount > 1) {
+      throw new Error(`Found ${response.rowCount} record in database`);
+    }
+
+    const id = response.rows[0] != undefined ? response.rows[0].calendar_id : undefined;
+
+    return [ response.rowCount > 0, id ];
+  }
+
+  async doesEuropeanCalendarEventExists(match: MatchTable): Promise<[ boolean, string? ]> {
+    const response = await this.client.query<EventTable>({
+      text: `SELECT * FROM events
+        WHERE home = $1 AND away = $2 AND date = $3 AND competition = $4 AND season = $5`,
+      values: [match.home, match.away, match.date, match.competition, match.season]
     });
 
     if (response.rowCount > 1) {

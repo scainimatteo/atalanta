@@ -65,7 +65,7 @@ export function convertMonth(month: string): string {
   }
 }
 
-export function isEuropeanMatch(match: Match): boolean {
+export function isEuropeanMatch(match: Match | MatchTable): boolean {
   switch (match.competition) {
     case Competitions.CHAMPIONS_LEAGUE:
     case Competitions.EUROPA_LEAGUE:

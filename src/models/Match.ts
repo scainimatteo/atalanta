@@ -81,6 +81,7 @@ export abstract class Match {
       case config.get('competitions.serie_a.logo'):
         return Competitions.SERIE_A;
       case config.get('competitions.europa_league.logo'):
+      case config.get('competitions.europa_league.logo_light'):
         return Competitions.EUROPA_LEAGUE;
       case config.get('competitions.coppa_italia.logo'):
         return Competitions.COPPA_ITALIA;
