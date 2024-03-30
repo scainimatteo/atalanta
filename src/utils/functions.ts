@@ -13,7 +13,9 @@ export function convertTeamName(team: string): string {
 }
 
 export function convertDate(date: string): string {
-  const matchDate = new Date(date);
+  let matchDate = new Date(date);
+  matchDate = new Date(matchDate.toLocaleString('en-US', { timeZone: 'Europe/Rome' }));
+
 
   return `${matchDate.getFullYear().toString().padStart(4, ' ')}-${( matchDate.getMonth() + 1 ).toString().padStart(2, '0')}-${matchDate.getDate().toString().padStart(2, '0')}`;
 }
