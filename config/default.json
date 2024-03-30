@@ -14,35 +14,10 @@
     "timezone": "Europe/Rome"
   },
   "source": {
-    "base_url": "https://www.atalanta.it/partite-e-risultati",
-    "query_param": "season",
+    "base_url": "https://www.legaseriea.it/api/stats/live/match",
+    "query_param": "order=oldest&team=ATALAN",
+    "season_param": "season_id",
     "season": 2023,
-    "current_season": 2023
-  },
-  "competitions": {
-    "serie_a": {
-      "name": "Serie A",
-      "logo": "https://www.atalanta.it/wp-content/uploads/2018/09/serie-a-tim-2023-24.svg"
-    },
-    "coppa_italia": {
-      "name": "Coppa Italia",
-      "logo": "https://www.atalanta.it/wp-content/uploads/2018/09/Supercoppa-freccia-23.svg"
-    },
-    "europa_league": {
-      "name": "Europa League",
-      "logo": "https://www.atalanta.it/wp-content/uploads/2018/12/europa_league_color.svg",
-      "logo_light": "https://www.atalanta.it/wp-content/uploads/2018/12/europa_league_white2.svg"
-    },
-    "champions_league": {
-      "name": "Champions League",
-      "logo": "https://www.atalanta.it/wp-content/uploads/2019/06/logo-champions-league-rgb-nero.svg"
-    }
-  },
-  "scraper": {
-    "css_path": {
-      "current_match": "#next-match-hero",
-      "next_matches": "",
-      "previous_matches": ""
-    }
+    "season_id": 157617
   }
 }

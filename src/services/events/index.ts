@@ -17,7 +17,7 @@ class EventsService {
     const changedMatches = await this.database.getChangedMatches();
 
     for (const match of changedMatches) {
-      console.log(`${match.home.padStart(18, ' ')} - ${match.away.padEnd(18, ' ')} | ${formatGoogleCalendarDate(match.date).padEnd(10, ' ')} | ${match.competition}`);
+      console.log(`${match.home.padStart(26, ' ')} - ${match.away.padEnd(26, ' ')} | ${formatGoogleCalendarDate(match.date).padEnd(10, ' ')} | ${match.competition}`);
 
       const [ eventExists, eventId ] = await this.database.doesCalendarEventExists(match);
       const calendarId = getCalendarId(match);
@@ -25,11 +25,11 @@ class EventsService {
       if (eventExists) {
         await this.calendar.updateMatch(match, calendarId, eventId);
         await this.database.updateCalendarEvent(eventId, match);
-        console.log('\t\tUPDATED');
+        console.log('\t\t\tUPDATED');
       } else {
         const newEventId = await this.calendar.createNewMatch(match, calendarId);
         await this.database.saveCalendarEvent(newEventId, match);
-        console.log('\t\tCREATED');
+        console.log('\t\t\tCREATED');
       }
 
       await this.database.saveMatchUpdate(match);

@@ -1,87 +1,6 @@
 import { MatchTable } from "@/models/Database";
-import { Match } from "@/models/Match";
-import { Competitions, Months, MonthsTranslations } from "@/utils/enums";
+import { ApiCompetitions, Competitions } from "@/utils/enums";
 import config from 'config';
-
-export function parseMonth(month: string): number {
-  switch (month.slice(0,3)) {
-    case MonthsTranslations.GENNAIO:
-      return 1;
-    case MonthsTranslations.FEBBRAIO:
-      return 2;
-    case MonthsTranslations.MARZO:
-      return 3;
-    case MonthsTranslations.APRILE:
-      return 4;
-    case MonthsTranslations.MAGGIO:
-      return 5;
-    case MonthsTranslations.GIUGNO:
-      return 6;
-    case MonthsTranslations.LUGLIO:
-      return 7;
-    case MonthsTranslations.AGOSTO:
-      return 8;
-    case MonthsTranslations.SETTEMBRE:
-      return 9;
-    case MonthsTranslations.OTTOBRE:
-      return 10;
-    case MonthsTranslations.NOVEMBRE:
-      return 11;
-    case MonthsTranslations.DICEMBRE:
-      return 12;
-    default:
-      return 0;
-  }
-}
-
-export function convertMonth(month: string): string {
-  switch (month.slice(0,3)) {
-    case Months.GENNAIO:
-      return MonthsTranslations.GENNAIO;
-    case Months.FEBBRAIO:
-      return MonthsTranslations.FEBBRAIO;
-    case Months.MARZO:
-      return MonthsTranslations.MARZO;
-    case Months.APRILE:
-      return MonthsTranslations.APRILE;
-    case Months.MAGGIO:
-      return MonthsTranslations.MAGGIO;
-    case Months.GIUGNO:
-      return MonthsTranslations.GIUGNO;
-    case Months.LUGLIO:
-      return MonthsTranslations.LUGLIO;
-    case Months.AGOSTO:
-      return MonthsTranslations.AGOSTO;
-    case Months.SETTEMBRE:
-      return MonthsTranslations.SETTEMBRE;
-    case Months.OTTOBRE:
-      return MonthsTranslations.OTTOBRE;
-    case Months.NOVEMBRE:
-      return MonthsTranslations.NOVEMBRE;
-    case Months.DICEMBRE:
-      return MonthsTranslations.DICEMBRE;
-    default:
-      return MonthsTranslations.GENNAIO;
-  }
-}
-
-export function isEuropeanMatch(match: Match | MatchTable): boolean {
-  switch (match.competition) {
-    case Competitions.CHAMPIONS_LEAGUE:
-    case Competitions.EUROPA_LEAGUE:
-      return true;
-    default:
-      return false;
-  }
-}
-
-export function yearFromSeason(season: number, month: number): number {
-  if (month < 7) {
-    return season + 1;
-  }
-
-  return season;
-}
 
 export function convertTeamName(team: string): string {
   let convertedTeamNames: string[] = [];
@@ -91,6 +10,31 @@ export function convertTeamName(team: string): string {
   }
 
   return convertedTeamNames.join(' ');
+}
+
+export function convertDate(date: string): string {
+  const matchDate = new Date(date);
+
+  return `${matchDate.getFullYear().toString().padStart(4, ' ')}-${( matchDate.getMonth() + 1 ).toString().padStart(2, '0')}-${matchDate.getDate().toString().padStart(2, '0')}`;
+}
+
+export function convertStartTime(startTime: string): string {
+  return startTime.split(':').slice(0, 2).join(':');
+}
+
+export function convertCompetitionName(competition: string): string {
+  switch (competition.trim()) {
+    case ApiCompetitions.SERIE_A:
+      return Competitions.SERIE_A;
+    case ApiCompetitions.COPPA_ITALIA:
+      return Competitions.COPPA_ITALIA;
+    case ApiCompetitions.EUROPA_LEAGUE:
+      return Competitions.EUROPA_LEAGUE;
+    case ApiCompetitions.CHAMPIONS_LEAGUE:
+      return Competitions.CHAMPIONS_LEAGUE;
+    default:
+      return Competitions.SERIE_A;
+  }
 }
 
 export function createExecutionId(): string {

@@ -1,16 +1,17 @@
 import axios from "axios";
-import * as cheerio from "cheerio";
 import config from 'config';
 
-import PreviousMatch from "@/models/PreviuosMatch";
-import CurrentMatch from "@/models/CurrentMatch";
-import NextMatch from "@/models/NextMatch";
+import { ApiMatch } from "@/utils/interfaces";
+
 import DatabaseService from "@/services/database";
+import { BaseMatch } from "@/models/BaseMatch";
 
 class ScraperService {
   BASE_URL: string;
   QUERY_PARAM: string;
+  SEASON_PARAM: string;
   SEASON: number;
+  SEASON_ID: number;
 
   database: DatabaseService;
 
@@ -19,47 +20,25 @@ class ScraperService {
 
     this.BASE_URL = config.get('source.base_url');
     this.QUERY_PARAM = config.get('source.query_param');
+    this.SEASON_PARAM = config.get('source.season_param');
     this.SEASON = config.get("source.season");
+    this.SEASON_ID = config.get("source.season_id");
   }
 
-  
   async execute(): Promise<void> {
-    const response = await axios.get(`${this.BASE_URL}?${this.QUERY_PARAM}=${this.SEASON}`);
-    const $ = cheerio.load(response.data);
+    const response = await axios.get(`${this.BASE_URL}?${this.QUERY_PARAM}&${this.SEASON_PARAM}=${this.SEASON_ID}`);
+    console.log(`\nAPI: ${this.BASE_URL}?${this.QUERY_PARAM}&${this.SEASON_PARAM}=${this.SEASON_ID}\n`);
 
-    console.log('\n------------- PREV  MATCHES -------------');
-    const previousMatchesList = $('#past-matches-list .item');
-    for (const match of previousMatchesList) {
-      const previousMatch = new PreviousMatch($, match, this.SEASON);
-      previousMatch.initialize();
-      await this.database.saveMatch(previousMatch);
-      previousMatch.print();
-    }
+    const matchesList: ApiMatch[] = response.data.data;
 
-    if (!isCurrentSeason()) {
-      return;
-    }
-
-    console.log('\n------------- CURRENT MATCH -------------');
-    const currentMatchElement = $('#next-match-hero').get(0);
-    const currentMatch = new CurrentMatch($, currentMatchElement, this.SEASON);
-    currentMatch.initialize();
-    await this.database.saveMatch(currentMatch);
-    currentMatch.print();
-
-    console.log('\n------------- NEXT  MATCHES -------------');
-    const nextMatchesList = $('#next-matches-slider .item');
-    for (const match of nextMatchesList) {
-      const nextMatch = new NextMatch($, match, this.SEASON);
-      nextMatch.initialize();
-      await this.database.saveMatch(nextMatch);
-      nextMatch.print();
+    for (const matchData of matchesList) {
+      const match = new BaseMatch(matchData, this.SEASON, this.SEASON_ID);
+      match.initialize();
+      await this.database.saveMatch(match);
+      match.print();
     }
   }
-}
-
-function isCurrentSeason(): boolean {
-  return config.get('source.season') == config.get('source.current_season');
+  
 }
 
 export default ScraperService;

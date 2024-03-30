@@ -2,9 +2,8 @@ import { Client } from 'pg';
 import config from 'config';
 
 import { EventTable, ExecutionTable, MatchTable } from '@/models/Database';
-import { Match } from '@/models/Match';
+import { BaseMatch } from '@/models/BaseMatch';
 import { ScriptNames } from '@/utils/enums';
-import { isEuropeanMatch } from '@/utils/functions';
 
 class DatabaseService {
   private client: Client;
@@ -31,20 +30,12 @@ class DatabaseService {
     return this.client
   }
 
-  async saveMatch(match: Match): Promise<void> {
-    if (!isEuropeanMatch(match)) {
-      await this.saveNationalMatch(match);
-    } else {
-      await this.saveEuropeanMatch(match);
-    }
-  }
-
-  private async saveNationalMatch(match: Match): Promise<void> {
+  async saveMatch(match: BaseMatch): Promise<void> {
     const matchRecords = await this.client.query<MatchTable>({
       text: `SELECT *
         FROM matches AS m
-        WHERE m.home = $1 AND m.away = $2 AND m.competition = $3 AND m.season = $4`,
-      values: [match.homeTeam, match.awayTeam, match.competition, match.season]
+        WHERE m.home = $1 AND m.away = $2 AND m.competition = $3 AND m.season = $4 AND m.round = $5`,
+      values: [match.homeTeam, match.awayTeam, match.competition, match.season, match.round]
     });
 
     if (matchRecords.rowCount > 1) {
@@ -53,9 +44,9 @@ class DatabaseService {
 
     if (matchRecords.rowCount == 0) {
       await this.client.query({
-        text: `INSERT INTO matches (home, away, date, competition, season, has_changed, last_updated)
-          VALUES ($1, $2, $3, $4, $5, $6, $7)`,
-        values: [match.homeTeam, match.awayTeam, new Date(match.date), match.competition, match.season, true, new Date()]
+        text: `INSERT INTO matches (home, away, date, competition, season, has_changed, last_updated, start_time, home_goal, away_goal, round, match_day)
+          VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)`,
+        values: [match.homeTeam, match.awayTeam, new Date(match.date), match.competition, match.season, true, new Date(), match.startTime, match.homeScore, match.awayScore, match.round, match.matchday]
       });
       
       return;
@@ -74,33 +65,11 @@ class DatabaseService {
     }
   }
 
-  private async saveEuropeanMatch(match: Match): Promise<void> {
-    const exactMatchRecords = await this.client.query<MatchTable>({
-      text: `SELECT *
-        FROM matches AS m
-        WHERE m.home = $1 AND m.away = $2 AND m.date = $3 AND m.competition = $4 AND m.season = $5`,
-      values: [match.homeTeam, match.awayTeam, new Date(match.date), match.competition, match.season]
-    });
-
-    if (exactMatchRecords.rowCount > 1) {
-      throw new Error(`Found ${exactMatchRecords.rowCount} record in database`);
-    }
-
-    if (exactMatchRecords.rowCount == 0) {
-      await this.client.query({
-        text: `INSERT INTO matches (home, away, date, competition, season, has_changed, last_updated)
-          VALUES ($1, $2, $3, $4, $5, $6, $7)`,
-        values: [match.homeTeam, match.awayTeam, new Date(match.date), match.competition, match.season, true, new Date()]
-      });
-      
-      return;
-    }
-  }
-
   async getChangedMatches(): Promise<MatchTable[]> {
     const response = await this.client.query<MatchTable>({
       text: `SELECT * FROM matches
-        WHERE has_changed = TRUE`,
+        WHERE has_changed = TRUE
+        ORDER BY id ASC`,
       values: []
     });
 
@@ -108,34 +77,10 @@ class DatabaseService {
   }
 
   async doesCalendarEventExists(match: MatchTable): Promise<[ boolean, string? ]> {
-    if (!isEuropeanMatch(match)) {
-      return await this.doesNationalCalendarEventExists(match);
-    } else {
-      return await this.doesEuropeanCalendarEventExists(match);
-    }
-  }
-
-  async doesNationalCalendarEventExists(match: MatchTable): Promise<[ boolean, string? ]> {
     const response = await this.client.query<EventTable>({
       text: `SELECT * FROM events
-        WHERE home = $1 AND away = $2 AND competition = $3 AND season = $4`,
-      values: [match.home, match.away, match.competition, match.season]
-    });
-
-    if (response.rowCount > 1) {
-      throw new Error(`Found ${response.rowCount} record in database`);
-    }
-
-    const id = response.rows[0] != undefined ? response.rows[0].calendar_id : undefined;
-
-    return [ response.rowCount > 0, id ];
-  }
-
-  async doesEuropeanCalendarEventExists(match: MatchTable): Promise<[ boolean, string? ]> {
-    const response = await this.client.query<EventTable>({
-      text: `SELECT * FROM events
-        WHERE home = $1 AND away = $2 AND date = $3 AND competition = $4 AND season = $5`,
-      values: [match.home, match.away, match.date, match.competition, match.season]
+        WHERE match_id = $1`,
+      values: [match.id]
     });
 
     if (response.rowCount > 1) {
@@ -149,9 +94,9 @@ class DatabaseService {
 
   async saveCalendarEvent(eventId: string, match: MatchTable): Promise<void> {
     await this.client.query({
-      text: `INSERT INTO events (calendar_id, home, away, date, competition, season)
-        VALUES ($1, $2, $3, $4, $5, $6)`,
-      values: [eventId, match.home, match.away, match.date, match.competition, match.season]
+      text: `INSERT INTO events (calendar_id, home, away, date, competition, season, match_id)
+        VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+      values: [eventId, match.home, match.away, match.date, match.competition, match.season, match.id]
     });
   }
 

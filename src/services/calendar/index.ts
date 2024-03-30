@@ -59,7 +59,7 @@ class GoogleCalendarService {
       end: {
         date: date,
         timeZone: config.get('google_calendar.timezone')
-      }
+      },
     };
   }
 }
