@@ -4,6 +4,7 @@ import config from 'config';
 import { EventTable, ExecutionTable, MatchTable } from '@/models/Database';
 import { BaseMatch } from '@/models/BaseMatch';
 import { ScriptNames } from '@/utils/enums';
+import { convertDate } from '@/utils/functions';
 
 class DatabaseService {
   private client: Client;
@@ -56,7 +57,7 @@ class DatabaseService {
     const matchRecord = matchRecords.rows[0];
     const matchDate = new Date( match.date );
 
-    if (matchRecord.date.getTime() != matchDate.getTime()) {
+    if (convertDate(matchRecord.date.toString()) != convertDate(matchDate.toString())) {
       await this.client.query({
         text: `UPDATE matches
           SET date = $1, has_changed = $2, last_updated = $3

@@ -34,8 +34,8 @@ class ScraperService {
     for (const matchData of matchesList) {
       const match = new BaseMatch(matchData, this.SEASON, this.SEASON_ID);
       match.initialize();
-      await this.database.saveMatch(match);
       match.print();
+      await this.database.saveMatch(match);
     }
   }
   

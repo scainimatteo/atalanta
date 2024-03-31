@@ -30,6 +30,7 @@ export function convertCompetitionName(competition: string): string {
       return Competitions.SERIE_A;
     case ApiCompetitions.COPPA_ITALIA:
       return Competitions.COPPA_ITALIA;
+    case ApiCompetitions.EUROPA_LEAGUE_SHORT:
     case ApiCompetitions.EUROPA_LEAGUE:
       return Competitions.EUROPA_LEAGUE;
     case ApiCompetitions.CHAMPIONS_LEAGUE:
