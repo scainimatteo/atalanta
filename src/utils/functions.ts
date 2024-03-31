@@ -28,6 +28,7 @@ export function convertCompetitionName(competition: string): string {
   switch (competition.trim()) {
     case ApiCompetitions.SERIE_A:
       return Competitions.SERIE_A;
+    case ApiCompetitions.COPPA_ITALIA_SHORT:
     case ApiCompetitions.COPPA_ITALIA:
       return Competitions.COPPA_ITALIA;
     case ApiCompetitions.EUROPA_LEAGUE_SHORT:

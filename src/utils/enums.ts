@@ -9,6 +9,7 @@ export enum ApiCompetitions {
   EUROPA_LEAGUE = "UEFA Europa League",
   EUROPA_LEAGUE_SHORT = "Europa League",
   COPPA_ITALIA = "COPPA ITALIA FRECCIAROSSA",
+  COPPA_ITALIA_SHORT = "COPPA ITALIA",
 }
 
 export enum Competitions {
