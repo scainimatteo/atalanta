@@ -48,6 +48,7 @@ class DatabaseService {
           VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)`,
         values: [match.homeTeam, match.awayTeam, new Date(match.date), match.competition, match.season, true, new Date(), match.startTime, match.homeScore, match.awayScore, match.round, match.matchday]
       });
+      console.log(`\t\t\tCREATED`);
       
       return;
     }
@@ -62,6 +63,7 @@ class DatabaseService {
           WHERE id = $4`,
         values: [matchDate, true, new Date(), matchRecord.id]
       });
+      console.log(`\t\t\tUPDATED`);
     }
   }
 
