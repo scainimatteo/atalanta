@@ -13,6 +13,7 @@
     "execute:development": "NODE_ENV=development node dist/index.js",
     "execute:development:scraper": "NODE_ENV=development node dist/index-scraper.js",
     "execute:development:events": "NODE_ENV=development node dist/index-events.js",
+    "execute:previous:scraper": "NODE_ENV=previousseason node dist/index-scraper.js",
     "build": "rm -rf dist; tsc"
   },
   "keywords": [],

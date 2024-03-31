@@ -1,0 +1,9 @@
+{
+  "database": {
+    "host": "192.168.1.191"
+  },
+  "source": {
+    "season": 2022,
+    "season_id": 150052
+  }
+}
