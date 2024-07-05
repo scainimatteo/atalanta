@@ -25,18 +25,25 @@ class ScraperService {
     this.SEASON_ID = config.get("source.season_id");
   }
 
-  async execute(): Promise<void> {
+  async execute(): Promise<string> {
+    let logs = [];
     const response = await axios.get(`${this.BASE_URL}?${this.QUERY_PARAM}&${this.SEASON_PARAM}=${this.SEASON_ID}`);
-    console.log(`\nAPI: ${this.BASE_URL}?${this.QUERY_PARAM}&${this.SEASON_PARAM}=${this.SEASON_ID}\n`);
+    const apiLog = `\nAPI: ${this.BASE_URL}?${this.QUERY_PARAM}&${this.SEASON_PARAM}=${this.SEASON_ID}\n`;
+    console.log( apiLog );
+    logs.push( apiLog );
 
     const matchesList: ApiMatch[] = response.data.data;
 
     for (const matchData of matchesList) {
       const match = new BaseMatch(matchData, this.SEASON, this.SEASON_ID);
       match.initialize();
-      match.print();
-      await this.database.saveMatch(match);
+      const matchLog = match.print();
+      if( matchLog != '' ) logs.push( matchLog );
+      const databaseLog = await this.database.saveMatch(match);
+      if( databaseLog != '' ) logs.push( databaseLog );
     }
+
+    return logs.join('\n');
   }
   
 }

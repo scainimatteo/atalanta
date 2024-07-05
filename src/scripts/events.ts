@@ -13,10 +13,12 @@ export async function main(): Promise<void> {
   const googleCalendar = new GoogleCalendarService();
   await googleCalendar.initialize();
 
+  let eventsLogs = '';
+
   try {
 
     const events = new EventsService(database, googleCalendar);
-    await events.execute();
+    eventsLogs = await events.execute();
 
   } catch (e) {
     await database.createFailedExecutionLog(createExecutionId(), ScriptNames.EVENTS, new Date(), JSON.stringify(e));
@@ -24,7 +26,7 @@ export async function main(): Promise<void> {
     return;
   }
 
-  await database.createSuccessfulExecutionLog(createExecutionId(), ScriptNames.EVENTS, new Date());
+  await database.createSuccessfulExecutionLog(createExecutionId(), ScriptNames.EVENTS, new Date(), eventsLogs);
   await database.dispose();
 
 }

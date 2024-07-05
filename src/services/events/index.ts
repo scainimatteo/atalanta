@@ -12,12 +12,15 @@ class EventsService {
     this.calendar = calendar;
   }
   
-  async execute(): Promise<void> {
+  async execute(): Promise<string> {
 
     const changedMatches = await this.database.getChangedMatches();
+    let logs = [];
 
     for (const match of changedMatches) {
-      console.log(`${match.home.padStart(26, ' ')} - ${match.away.padEnd(26, ' ')} | ${formatGoogleCalendarDate(match.date).padEnd(10, ' ')} | ${match.competition}`);
+      let matchLog = `${match.home.padStart(26, ' ')} - ${match.away.padEnd(26, ' ')} | ${formatGoogleCalendarDate(match.date).padEnd(10, ' ')} | ${match.competition}`;
+      console.log( matchLog );
+      logs.push( matchLog );
 
       const [ eventExists, eventId ] = await this.database.doesCalendarEventExists(match);
       const calendarId = getCalendarId(match);
@@ -25,15 +28,21 @@ class EventsService {
       if (eventExists) {
         await this.calendar.updateMatch(match, calendarId, eventId);
         await this.database.updateCalendarEvent(eventId, match);
-        console.log('\t\t\tUPDATED');
+        let operationLog = '\t\t\tUPDATED';
+	console.log( operationLog );
+	logs.push( operationLog );
       } else {
         const newEventId = await this.calendar.createNewMatch(match, calendarId);
         await this.database.saveCalendarEvent(newEventId, match);
-        console.log('\t\t\tCREATED');
+        let operationLog = '\t\t\tCREATED';
+	console.log( operationLog );
+	logs.push( operationLog );
       }
 
       await this.database.saveMatchUpdate(match);
     }
+
+    return logs.join('\n');
 
   }
 }

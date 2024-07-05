@@ -46,7 +46,9 @@ export class BaseMatch {
   protected setMatchday(): void { this.matchday = this.match.match_day_title; }
   protected setStartTime(): void { this.startTime = convertStartTime(this.match.match_hm); }
 
-  print(): void {
-    console.log( `${ this.homeTeam.padStart(26, ' ') } - ${ this.awayTeam.padEnd(26, ' ') } | ${ this.date } | ${ this.competition }` );
+  print(): string {
+    const message: string = `${ this.homeTeam.padStart(26, ' ') } - ${ this.awayTeam.padEnd(26, ' ') } | ${ this.date } | ${ this.competition }`;
+    console.log( message );
+    return message;
   }
 }

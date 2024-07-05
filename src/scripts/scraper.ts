@@ -9,10 +9,12 @@ export async function main(): Promise<void> {
   const database = new DatabaseService();
   await database.connect();
 
+  let scraperLogs = '';
+
   try {
 
     const scraper = new ScraperService(database);
-    await scraper.execute();
+    scraperLogs = await scraper.execute();
 
   } catch (e) {
     await database.createFailedExecutionLog(createExecutionId(), ScriptNames.SCRAPER, new Date(), JSON.stringify(e));
@@ -20,7 +22,7 @@ export async function main(): Promise<void> {
     return;
   }
 
-  await database.createSuccessfulExecutionLog(createExecutionId(), ScriptNames.SCRAPER, new Date());
+  await database.createSuccessfulExecutionLog(createExecutionId(), ScriptNames.SCRAPER, new Date(), scraperLogs);
   await database.dispose();
 
 }

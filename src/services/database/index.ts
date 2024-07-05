@@ -31,7 +31,7 @@ class DatabaseService {
     return this.client
   }
 
-  async saveMatch(match: BaseMatch): Promise<void> {
+  async saveMatch(match: BaseMatch): Promise<string> {
     const matchRecords = await this.client.query<MatchTable>({
       text: `SELECT *
         FROM matches AS m
@@ -49,9 +49,10 @@ class DatabaseService {
           VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)`,
         values: [match.homeTeam, match.awayTeam, new Date(match.date), match.competition, match.season, true, new Date(), match.startTime, match.homeScore, match.awayScore, match.round, match.matchday]
       });
-      console.log(`\t\t\tCREATED`);
+      const message = `\t\t\tCREATED`;
+      console.log( message );
       
-      return;
+      return message;
     }
 
     const matchRecord = matchRecords.rows[0];
@@ -64,8 +65,12 @@ class DatabaseService {
           WHERE id = $4`,
         values: [matchDate, true, new Date(), matchRecord.id]
       });
-      console.log(`\t\t\tUPDATED`);
+      const message = `\t\t\tUPDATED`;
+      console.log( message );
+      return message;
     }
+
+    return '';
   }
 
   async getChangedMatches(): Promise<MatchTable[]> {
@@ -125,8 +130,8 @@ class DatabaseService {
     await this.createExecutionLog(id, script, false, date, error);
   }
 
-  async createSuccessfulExecutionLog(id: string, script: ScriptNames, date: Date, error?: string): Promise<void> {
-    await this.createExecutionLog(id, script, true, date, error);
+  async createSuccessfulExecutionLog(id: string, script: ScriptNames, date: Date, log?: string): Promise<void> {
+    await this.createExecutionLog(id, script, true, date, log);
   }
 
   private async createExecutionLog(id: string, script: ScriptNames, success: boolean, date: Date, error?: string): Promise<void> {
