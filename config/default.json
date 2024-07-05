@@ -17,7 +17,7 @@
     "base_url": "https://www.legaseriea.it/api/stats/live/match",
     "query_param": "order=oldest&team=ATALAN",
     "season_param": "season_id",
-    "season": 2023,
-    "season_id": 157617
+    "season": 2024,
+    "season_id": 264681
   }
 }
